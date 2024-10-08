@@ -1,3 +1,7 @@
+// Windows X64 28418
+let offset_recv = 0x1BD4802;
+let offset_send = 0x1BD25E8;
+
 function bytesToHex(arrayBuffer) {
     var bytes = new Uint8Array(arrayBuffer)
     for (var hex = [], i = 0; i < bytes.length; i++) {
@@ -11,7 +15,7 @@ async function main() {
     while (BaseMoudle == null) {
         BaseMoudle = Module.findBaseAddress('wrapper.node');
     }
-    let hook_recv = BaseMoudle.add(0x1BD4802);
+    let hook_recv = BaseMoudle.add(offset_recv);
     console.log("hook_recv at: ", hook_recv);
     Interceptor.attach(hook_recv, {
         onEnter(args) {
@@ -42,7 +46,7 @@ async function main() {
 
         }
     })
-    let hook_send = BaseMoudle.add(0x1BD25E8);
+    let hook_send = BaseMoudle.add(offset_send);
     console.log("hook_send at: ", hook_send);
     Interceptor.attach(hook_send, {
         onEnter(args) {
@@ -75,4 +79,3 @@ async function main() {
 }
 
 main().then();
-//
