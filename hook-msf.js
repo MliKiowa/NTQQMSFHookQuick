@@ -44,7 +44,7 @@ async function main() {
             console.log("buffer_ptr:", bufferPtr);
             console.log("buffer_end:", buffer_end);
             console.log("buffer_len:", buffer_len);
-            // console.log("hex buffer_start", bytesToHex(buffer_start.readByteArray(buffer_len)));
+            console.log("hex buffer_start", bytesToHex(buffer_start.readByteArray(buffer_len)));
             console.log('----------------------');
         },
         onLeave(retval) {
