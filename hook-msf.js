@@ -35,7 +35,7 @@ async function main() {
             console.log('type: recv');
             console.log("seq:", Memory.readU32(seq));
             let _cmd = Memory.readUtf8String(cmd);
-            if(_cmd.trim().length == 0) {
+            if(_cmd.trim().length < 2) {
                 _cmd =  Memory.readUtf8String(Memory.readPointer(Memory.readPointer(args[1]).add(48)));
             }
             console.log("cmd:",_cmd);
@@ -59,7 +59,7 @@ async function main() {
             let seq = Memory.readPointer(args[1]).add(64);
             let uin = Memory.readPointer(args[1]).add(32);
             let uin_str =  Memory.readUtf8String(uin);
-            let cmd = Memory.readPointer(Memory.readPointer(args[1])).add(1);// remove errot parse
+            let cmd = Memory.readPointer(Memory.readPointer(args[1])).add(1);// remove error parse
             let bufferPtr = Memory.readPointer(Memory.readPointer(Memory.readPointer(args[1])).add(32));
             let buffer_start = Memory.readPointer(bufferPtr);
             let buffer_end = Memory.readPointer(bufferPtr.add(8));
@@ -70,7 +70,11 @@ async function main() {
             console.log('type: send');
             console.log("seq:", Memory.readU32(seq));
             console.log("uin:",uin_str);
-            console.log("cmd:",Memory.readUtf8String(cmd));
+            let _cmd = Memory.readUtf8String(cmd);
+            if(_cmd.trim().length < 2) {
+                _cmd =  Memory.readUtf8String(Memory.readPointer(Memory.readPointer(args[1])));
+            } 
+            console.log("cmd:",_cmd);
             console.log("buffer_start:", buffer_start);
             console.log("buffer_ptr:", bufferPtr);
             console.log("buffer_end:", buffer_end);
