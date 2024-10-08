@@ -20,8 +20,8 @@ async function main() {
     Interceptor.attach(hook_recv, {
         onEnter(args) {
             console.log('----------------------');
-            let cmd = Memory.readPointer(args[1]).add(32).add(1);// remove errot parse
-            let cmdInner = Memory.readPointer(args[1]).add(32);
+            let cmd = Memory.readPointer(args[1]).add(32).add(1);
+
             let seq = Memory.readPointer(args[1]).add(24);
             let uin = Memory.readPointer(args[1]);
             let bufferPtr =  Memory.readPointer(Memory.readPointer(args[1]).add(56));
@@ -34,14 +34,17 @@ async function main() {
 
             console.log('type: recv');
             console.log("seq:", Memory.readU32(seq));
-            console.log("cmd:", Memory.readCString(cmd));
-            console.log("cmdInner:", Memory.readCString(cmdInner));
+            let _cmd = Memory.readUtf8String(cmd);
+            if(_cmd.trim().length == 0) {
+                _cmd =  Memory.readUtf8String(Memory.readPointer(Memory.readPointer(args[1]).add(48)));
+            }
+            console.log("cmd:",_cmd);
             console.log("uin:", uin_str);
             console.log("buffer_start:", buffer_start);
             console.log("buffer_ptr:", bufferPtr);
             console.log("buffer_end:", buffer_end);
             console.log("buffer_len:", buffer_len);
-            console.log("hex buffer_start", bytesToHex(buffer_start.readByteArray(buffer_len)));
+            // console.log("hex buffer_start", bytesToHex(buffer_start.readByteArray(buffer_len)));
             console.log('----------------------');
         },
         onLeave(retval) {
@@ -52,28 +55,28 @@ async function main() {
     console.log("hook_send at: ", hook_send);
     Interceptor.attach(hook_send, {
         onEnter(args) {
-            console.log('----------------------');
-            let seq = Memory.readPointer(args[1]).add(64);
-            let uin = Memory.readPointer(args[1]).add(32);
-            let uin_str =  Memory.readUtf8String(uin);
-            let cmd = Memory.readPointer(Memory.readPointer(args[1])).add(1);// remove errot parse
-            let bufferPtr = Memory.readPointer(Memory.readPointer(Memory.readPointer(args[1])).add(32));
-            let buffer_start = Memory.readPointer(bufferPtr);
-            let buffer_end = Memory.readPointer(bufferPtr.add(8));
-            let buffer_len = buffer_end - buffer_start;
+            // console.log('----------------------');
+            // let seq = Memory.readPointer(args[1]).add(64);
+            // let uin = Memory.readPointer(args[1]).add(32);
+            // let uin_str =  Memory.readUtf8String(uin);
+            // let cmd = Memory.readPointer(Memory.readPointer(args[1])).add(1);// remove errot parse
+            // let bufferPtr = Memory.readPointer(Memory.readPointer(Memory.readPointer(args[1])).add(32));
+            // let buffer_start = Memory.readPointer(bufferPtr);
+            // let buffer_end = Memory.readPointer(bufferPtr.add(8));
+            // let buffer_len = buffer_end - buffer_start;
 
-            if(isNaN(parseInt(uin_str))) uin_str = 'unknow';
+            // if(isNaN(parseInt(uin_str))) uin_str = 'unknow';
 
-            console.log('type: send');
-            console.log("seq:", Memory.readU32(seq));
-            console.log("uin:",uin_str);
-            console.log("cmd:",Memory.readUtf8String(cmd));
-            console.log("buffer_start:", buffer_start);
-            console.log("buffer_ptr:", bufferPtr);
-            console.log("buffer_end:", buffer_end);
-            console.log("buffer_len:", buffer_len);
-            console.log("hex buffer_start", bytesToHex(buffer_start.readByteArray(buffer_len)));
-            console.log('----------------------');
+            // console.log('type: send');
+            // console.log("seq:", Memory.readU32(seq));
+            // console.log("uin:",uin_str);
+            // console.log("cmd:",Memory.readUtf8String(cmd));
+            // console.log("buffer_start:", buffer_start);
+            // console.log("buffer_ptr:", bufferPtr);
+            // console.log("buffer_end:", buffer_end);
+            // console.log("buffer_len:", buffer_len);
+            // console.log("hex buffer_start", bytesToHex(buffer_start.readByteArray(buffer_len)));
+            // console.log('----------------------');
         },
         onLeave(retval) {
         }
