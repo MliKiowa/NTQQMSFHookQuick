@@ -21,6 +21,7 @@ async function main() {
         onEnter(args) {
             console.log('----------------------');
             let cmd = Memory.readPointer(args[1]).add(32).add(1);// remove errot parse
+            let cmdInner = Memory.readPointer(args[1]).add(32);
             let seq = Memory.readPointer(args[1]).add(24);
             let uin = Memory.readPointer(args[1]);
             let bufferPtr =  Memory.readPointer(Memory.readPointer(args[1]).add(56));
@@ -34,7 +35,8 @@ async function main() {
             console.log('type: recv');
             console.log("seq:", Memory.readU32(seq));
             console.log("cmd:", Memory.readCString(cmd));
-            console.log("uin:", );
+            console.log("cmdInner:", Memory.readCString(cmdInner));
+            console.log("uin:", uin_str);
             console.log("buffer_start:", buffer_start);
             console.log("buffer_ptr:", bufferPtr);
             console.log("buffer_end:", buffer_end);
