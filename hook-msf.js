@@ -23,7 +23,7 @@ async function main() {
             let cmd = Memory.readPointer(args[1]).add(32).add(1);
 
             let seq = Memory.readPointer(args[1]).add(24);
-            let uin = Memory.readPointer(args[1]);
+            let uin = Memory.readPointer(args[1]).add(1);// remove error parse
             let bufferPtr =  Memory.readPointer(Memory.readPointer(args[1]).add(56));
             let buffer_start = Memory.readPointer(bufferPtr);
             let buffer_end = Memory.readPointer(bufferPtr.add(8));
