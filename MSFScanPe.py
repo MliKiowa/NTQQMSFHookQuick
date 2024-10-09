@@ -23,3 +23,5 @@ print('[debug] offset_msf_task_vtable_typeinfo_xref: ',hex(offset_msf_task_vtabl
 
 offset_msf_ng_text = search_bytes(pe, offset_msf_task_vtable_typeinfo_xref - 0x100, offset_msf_task_vtable_typeinfo_xref + 0x100, b'MSF-NG')
 print('[debug] offset_msf_ng_text: ',hex(offset_msf_ng_text))
+
+print('[result] offset_msf_recv',hex(int.from_bytes(pe.get_data(offset_msf_ng_text - 0x8, 8), 'little')))
