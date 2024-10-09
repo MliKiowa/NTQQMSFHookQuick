@@ -57,7 +57,7 @@ async function main() {
         onEnter(args) {
             console.log('----------------------');
             let seq = Memory.readPointer(args[1]).add(64);
-            let uin = Memory.readPointer(args[1]).add(32);
+            let uin = Memory.readPointer(args[1]).add(32).add(1);// remove error parse
             let uin_str =  Memory.readUtf8String(uin);
             let cmd = Memory.readPointer(Memory.readPointer(args[1])).add(1);// remove error parse
             let bufferPtr = Memory.readPointer(Memory.readPointer(Memory.readPointer(args[1])).add(32));
