@@ -84,7 +84,7 @@ async function main() {
             console.log("buffer_ptr:", bufferPtr);
             console.log("buffer_end:", buffer_end);
             console.log("buffer_len:", buffer_len);
-            //console.log("hex buffer_start", buffer_hex);
+            console.log("hex buffer_start", buffer_hex);
 
             console.log('----------------------');
         },
