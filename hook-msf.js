@@ -59,9 +59,10 @@ async function main() {
     Interceptor.attach(hook_send, {
         onEnter(args) {
             console.log('----------------------');
-            
+
             let seq = Memory.readPointer(args[1]).add(64);
             let uin = Memory.readPointer(args[1]).add(32);
+            let uin_type = new Uint8Array(uin.readByteArray(1))[0] & 0x1;
             let cmd = Memory.readPointer(Memory.readPointer(args[1]));
             let cmd_type = new Uint8Array(cmd.readByteArray(1))[0] & 0x1;
             let bufferPtr = Memory.readPointer(Memory.readPointer(Memory.readPointer(args[1])).add(32));
@@ -83,7 +84,7 @@ async function main() {
             console.log("buffer_ptr:", bufferPtr);
             console.log("buffer_end:", buffer_end);
             console.log("buffer_len:", buffer_len);
-            console.log("hex buffer_start", buffer_hex);
+            //console.log("hex buffer_start", buffer_hex);
 
             console.log('----------------------');
         },

@@ -71,6 +71,7 @@ async function main() {
             
             let seq = Memory.readPointer(args[1]).add(64);
             let uin = Memory.readPointer(args[1]).add(32);
+            let uin_type = new Uint8Array(uin.readByteArray(1))[0] & 0x1;
             let cmd = Memory.readPointer(Memory.readPointer(args[1]));
             let cmd_type = new Uint8Array(cmd.readByteArray(1))[0] & 0x1;
             let bufferPtr = Memory.readPointer(Memory.readPointer(Memory.readPointer(args[1])).add(32));
