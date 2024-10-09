@@ -20,8 +20,8 @@ async function main() {
     Interceptor.attach(hook_recv, {
         onEnter(args) {
             console.log('----------------------');
-            let cmd = Memory.readPointer(args[1]).add(32).add(1);
-
+            let cmd = Memory.readPointer(args[1]).add(32);
+            let cmd_type = new Uint8Array(cmd.readByteArray(1))[0] & 0x1;
             let seq = Memory.readPointer(args[1]).add(24);
             let uin = Memory.readPointer(args[1]).add(1);// remove error parse
             let bufferPtr =  Memory.readPointer(Memory.readPointer(args[1]).add(56));
@@ -34,11 +34,8 @@ async function main() {
 
             console.log('type: recv');
             console.log("seq:", Memory.readU32(seq));
-            let _cmd = Memory.readUtf8String(cmd);
-            if(_cmd.trim().length < 5) {
-                _cmd =  Memory.readUtf8String(Memory.readPointer(Memory.readPointer(args[1]).add(48)));
-            }
-            console.log("cmd:",_cmd);
+            let _cmd = cmd_type == 0 ? Memory.readUtf8String(cmd.add(1)) : Memory.readUtf8String(Memory.readPointer(cmd.add(16)));
+            console.log("cmd:", _cmd);
             console.log("uin:", uin_str);
             console.log("buffer_start:", buffer_start);
             console.log("buffer_ptr:", bufferPtr);
@@ -53,36 +50,36 @@ async function main() {
     })
     let hook_send = BaseMoudle.add(offset_send);
     console.log("hook_send at: ", hook_send);
-    Interceptor.attach(hook_send, {
-        onEnter(args) {
-            console.log('----------------------');
-            let seq = Memory.readPointer(args[1]).add(64);
-            let uin = Memory.readPointer(args[1]).add(32).add(1);// remove error parse
-            let uin_str = Memory.readUtf8String(uin);
-            let cmd = Memory.readPointer(Memory.readPointer(args[1]));// remove error parse
-            let cmd_type = new Uint8Array(cmd.readByteArray(1))[0] & 0x1;
-            let bufferPtr = Memory.readPointer(Memory.readPointer(Memory.readPointer(args[1])).add(32));
-            let buffer_start = Memory.readPointer(bufferPtr);
-            let buffer_end = Memory.readPointer(bufferPtr.add(8));
-            let buffer_len = buffer_end - buffer_start;
-            if (isNaN(parseInt(uin_str))) uin_str = 'unknow';
+    // Interceptor.attach(hook_send, {
+    //     onEnter(args) {
+    //         console.log('----------------------');
+    //         let seq = Memory.readPointer(args[1]).add(64);
+    //         let uin = Memory.readPointer(args[1]).add(32).add(1);// remove error parse
+    //         let uin_str = Memory.readUtf8String(uin);
+    //         let cmd = Memory.readPointer(Memory.readPointer(args[1]));
+    //         let cmd_type = new Uint8Array(cmd.readByteArray(1))[0] & 0x1;
+    //         let bufferPtr = Memory.readPointer(Memory.readPointer(Memory.readPointer(args[1])).add(32));
+    //         let buffer_start = Memory.readPointer(bufferPtr);
+    //         let buffer_end = Memory.readPointer(bufferPtr.add(8));
+    //         let buffer_len = buffer_end - buffer_start;
+    //         if (isNaN(parseInt(uin_str))) uin_str = 'unknow';
 
-            console.log('type: send');
-            console.log("seq:", Memory.readU32(seq));
-            console.log("uin:", uin_str);
-            let _cmd = cmd_type == 0 ? Memory.readUtf8String(cmd.add(1)) : Memory.readUtf8String(Memory.readPointer(cmd.add(16)));
-            console.log("cmd:", _cmd);
-            console.log("cmd_type:", cmd_type);
-            console.log("buffer_start:", buffer_start);
-            console.log("buffer_ptr:", bufferPtr);
-            console.log("buffer_end:", buffer_end);
-            console.log("buffer_len:", buffer_len);
-            console.log("hex buffer_start", bytesToHex(buffer_start.readByteArray(buffer_len)));
-            console.log('----------------------');
-        },
-        onLeave(retval) {
-        }
-    })
+    //         console.log('type: send');
+    //         console.log("seq:", Memory.readU32(seq));
+    //         console.log("uin:", uin_str);
+    //         let _cmd = cmd_type == 0 ? Memory.readUtf8String(cmd.add(1)) : Memory.readUtf8String(Memory.readPointer(cmd.add(16)));
+    //         console.log("cmd:", _cmd);
+    //         console.log("cmd_type:", cmd_type);
+    //         console.log("buffer_start:", buffer_start);
+    //         console.log("buffer_ptr:", bufferPtr);
+    //         console.log("buffer_end:", buffer_end);
+    //         console.log("buffer_len:", buffer_len);
+    //         console.log("hex buffer_start", bytesToHex(buffer_start.readByteArray(buffer_len)));
+    //         console.log('----------------------');
+    //     },
+    //     onLeave(retval) {
+    //     }
+    // })
 }
 
 main().then();
